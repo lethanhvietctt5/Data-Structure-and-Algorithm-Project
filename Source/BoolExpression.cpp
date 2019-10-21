@@ -170,14 +170,9 @@ string BoolExpression::inputBoolExpression()
 {
 	//TODO: Nhập vào biểu thức bool 
 	string result;
-	cout << "-----RULES-----" << endl;
-	cout << "not A   -> A'" << endl;
-	cout << "A and B -> AB" << endl;
-	cout << "A or B  -> A+B" << endl;
-	cout << "---------------" << endl;
 
-	cout << endl;
-	cout << "Input Bool Expression:" << endl;
+	cout << "Enter Your Bool Expression:" << endl;
+	cin.ignore();
 	getline(cin, result);
 	return result;
 }
@@ -529,7 +524,7 @@ void BoolExpression::simplifyExpression()
 			result.push_back(res_temp);
 		}
 	}
-	cout << endl << "====" <<"All expression(s) after simplify:" << "====" << endl;
+	cout << endl << "====All expression(s) after simplify====" << endl;
 	for (int i = 0; i < result.size(); i++)
 	{	//in ra kết quả
 		result[i].printExpression();

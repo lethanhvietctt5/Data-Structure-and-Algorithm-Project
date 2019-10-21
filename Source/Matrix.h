@@ -13,8 +13,10 @@ public:
 	Matrix(int r, int c);	// Constructor tham số
 
 	Matrix(int r, int c,double** m);	// Constructor tham số
-
+	
 	Matrix(const Matrix& matrix);	// Constructor copy
+
+	bool isEmpty();
 
 	double determine(double** m,int n);		// hàm dùng để tính định thức của ma trận
 
@@ -22,7 +24,7 @@ public:
 
 	Matrix inverseMatrix();		// Hàm trả về ma trận nghịch đảo
 
-	Matrix multiplyMatrix(const Matrix& m);		// Hàm nhân hai ma trận
+	Matrix operator *(const Matrix& m);		// Hàm nhân hai ma trận
 
 	int rankMatrix();	// Hàm tính và trả về hạng của ma trận
 

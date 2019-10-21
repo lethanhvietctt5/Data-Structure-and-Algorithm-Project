@@ -92,6 +92,13 @@ Matrix::Matrix(const Matrix& matrix)
 	}
 }
 
+bool Matrix::isEmpty()
+{
+	if (_column == 0 || _row == 0)
+		return true;
+	return false;
+}
+
 
 double Matrix::determine(double** m,int n) // m là ma trận cần tính, n là kích cỡ của ma trận (nxn)
 {
@@ -148,8 +155,33 @@ int Matrix::determinantMatrix()
 {
 	//TODO: trả về giá trị của định thức
 
+	// Nhận input
+
+	if (_row == 0 && _column == 0)
+	{
+		cout << "Enter number of rows = ";
+		cin >> _row;
+		cout << "Enter number of columns = ";
+		cin >> _column;
+
+		for (int index = 0; index < _row; index++)
+			_matrix[index] = new double[_column];
+	}
+
 	if (_row != _column)
+
 		return -1;
+
+
+	// Nhập từng phần tử cho ma trận
+	for (int i = 0; i < _row; i++)
+	{
+		for (int j = 0; j < _column; j++)
+		{
+			cout << "matrix[" << i << "]" << "[" << j << "]=";
+			cin >> _matrix[i][j];
+		}
+	}
 
 	return (int)determine(_matrix, _row);
 }
@@ -163,10 +195,10 @@ Matrix Matrix::inverseMatrix()
 }
 
 
-Matrix Matrix::multiplyMatrix(const Matrix& m)	// m là ma trận được nhân với ma trận hiện tại
+Matrix Matrix::operator *(const Matrix& m)	// m là ma trận được nhân với ma trận hiện tại
 {
 	//TODO: Nhân hai ma trận
-
+	
 	// Nếu không có dạng m*n nhân với n*p thì trả về ma trận rỗng
 	Matrix tmp;
 	if (_column != m._row)
@@ -282,9 +314,9 @@ void Matrix::inputMatrix()
 	// Kiểm tra nếu dòng và cột chưa có thì phải nhập
 	if (_row == 0 && _column == 0)
 	{
-		cout << "Enter row =";
+		cout << "Enter number of rows = ";
 		cin >> _row;
-		cout << "Enter column=";
+		cout << "Enter number of columns = ";
 		cin >> _column;
 
 		for (int index = 0; index < _row; index++)
@@ -295,8 +327,6 @@ void Matrix::inputMatrix()
 	// Nhập từng phần tử cho ma trận
 	for (int i = 0; i < _row; i++)
 	{
-		cout << "Enter row " << i << ":" << endl;
-
 		for (int j = 0; j < _column; j++)
 		{
 			cout << "matrix[" << i << "]" << "[" << j << "]=";
