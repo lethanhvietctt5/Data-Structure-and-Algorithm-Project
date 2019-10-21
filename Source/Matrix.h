@@ -33,4 +33,6 @@ public:
 	void inputMatrix();			// Hàm nhập vào ma trận
 
 	void showMatrix();		// Hàm in ra ma trận
+
+	Matrix ChooseEquation(Matrix &x);		// hàm chọn n phương trình theo n ẩn (trong tường hợp có nghiệm mà số phương trình lớn hơn số ẩn)
 };

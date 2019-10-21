@@ -1,14 +1,14 @@
-#include <iostream>
+﻿#include <iostream>
 #include <Windows.h>
 #include <conio.h>
 #include "BoolExpression.h"
 #include "Matrix.h"
+#include "Vector.h"
 
 using namespace std;
 
-void Bool()
+void boolExpression()
 {
-	/*while (_kbhit()) _getch();*/
 	system("cls");
 	cout << "           ==========================================" << endl;
 	cout << "                    SIMPLIFY BOOL EXPRESSION         " << endl;
@@ -28,32 +28,84 @@ void Bool()
 	b.simplifyExpression();
 }
 
+void vectorOperations()
+{
+	system("cls");
+
+	cout << "                ============================================================" << endl;
+	cout << "                                     OPERATIONS WITH VECTOR            " << endl;
+	cout << "                ============================================================" << endl;
+	cout << endl;
+	cout << "                                1.Addition 2 vector." << endl;
+	cout << "                                2.Multiply a vector with alpha number."<< endl;
+	cout << endl << "        ===============================================================================" << endl;
+	int choose;
+	cout << "Your choose: "; cin >> choose;
+	switch (choose)
+	{
+	case 1:
+	{
+			  Vector v1, v2, v3;
+			  cout << "Enter the first vector:" << endl;
+			  v1.inputVector();
+			  cout << "Enter the second vector:" << endl;
+			  v2.inputVector();
+			  
+			  v3 = v1 + v2;
+			  if (v3.isEmpty())
+				  cout << "The length of two vectors must be equal.";
+			  else
+			  {
+				  cout << endl << "Vector result:" << endl;
+				  v3.showVector();
+			  }
+
+			  break;
+	}
+	case 2:
+	{
+			  Vector v, v2;
+			  double alpha;
+			  cout << "Enter vector:" << endl;
+			  v.inputVector();
+			  cout << "Enter alpha number:" << endl;
+			  cin >> alpha;
+
+			  v2 = v * alpha;
+			  cout << endl << "Vector result:" << endl;
+			  v2.showVector();
+			  break;
+	}
+	default:
+		break;
+	}
+}
+
 void matrix()
 {
 	system("cls");
-	cout << "           ==========================================" << endl;
-	cout << "                      OPERATIONS WITH MATRIX         " << endl;
-	cout << "           ==========================================" << endl;
-	cout << endl << endl;
 
+	cout << "                ============================================================" << endl;
+	cout << "                                     OPERATIONS WITH MATRIX            " << endl;
+	cout << "                ============================================================" << endl;
+	cout << endl;
+	cout << "                                1.Caculate Determination of Matrix." << endl;
+	cout << "                                2.Inverse Matrix." << endl;
+	cout << "                                3.Mutiply two Matrics." << endl;
+	cout << "                                4.Find Rank of Matrix." << endl;
+	cout << "                                5.Solve System of Linear Equation." << endl;
+	cout << endl << "        ===============================================================================" << endl;
 	int choose;
-
-	cout << "	1.Caculate Determination of Matrix." << endl;
-	cout << "	2.Inverse Matrix." << endl;
-	cout << "	3.Mutiply two Matrics." << endl;
-	cout << "	4.Find Rank of Matrix." << endl;
-	cout << "	5.Solve System of Linear Equation." << endl;
-	cout << "=================================================================================" << endl;
 	cout << "Your choose: "; cin >> choose;
-
 	switch (choose)
 	{
 	case 1:
 	{
 		Matrix m;
-		cout << "Enter matrix:" << endl;
+		cout <<"Enter matrix:" << endl;
+		m.inputMatrix();
 		int det = m.determinantMatrix();
-		if (det < 0)
+		if (det == INT_MIN)
 			cout << "Matrix don't have determination." << endl;
 		else
 		{
@@ -62,7 +114,20 @@ void matrix()
 		break;
 	}
 	case 2:
-		break;
+	{
+		  Matrix m, m2;
+		  cout << "Enter matrix:" << endl;
+		  m.inputMatrix();
+		  m2 = m.inverseMatrix();
+		  if (m2.isEmpty())
+			  cout << "Can't inverse this matrix.";
+		  else
+		  {
+			  cout << "Inversed matrix:" << endl;
+			  m2.showMatrix();
+		  }
+		  break;
+	}
 	case 3:
 	{
 		Matrix m1, m2, m3;
@@ -91,7 +156,17 @@ void matrix()
 		break;
 	}
 	case 5:
-		break;
+	{
+		  int n_var, n_equation; // số biến và số phương trình
+		  cout << "Enter number of variable(s):" << endl;
+		  cin >> n_var;
+		  cout << "Enter number of equation(s):" << endl;
+		  cin >> n_equation;
+		  Matrix m(n_equation, n_var + 1);
+		  m.inputMatrix();
+		  m.systemLinerEquation();
+		  break;
+	}
 	default:
 		break;
 	}
@@ -108,15 +183,16 @@ int main()
 		cout << "                                1. Simplify Bool Expression." << endl;
 		cout << "                                2. Operations with Vector." << endl;
 		cout << "                                3. Operations with Matrix." << endl;
-		cout <<endl << "        ===============================================================================" << endl;
+		cout << endl << "        ===============================================================================" << endl;
 		int choose;
 		cout << "Your choose:"; cin >> choose;
 		switch (choose)
 		{
 		case 1:
-			Bool();
+			boolExpression();
 			break;
 		case 2:
+			vectorOperations();
 			break;
 		case 3:
 			matrix();

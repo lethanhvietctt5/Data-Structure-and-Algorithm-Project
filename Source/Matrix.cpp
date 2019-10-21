@@ -157,41 +157,49 @@ int Matrix::determinantMatrix()
 
 	// Nhận input
 
-	if (_row == 0 && _column == 0)
-	{
-		cout << "Enter number of rows = ";
-		cin >> _row;
-		cout << "Enter number of columns = ";
-		cin >> _column;
-
-		for (int index = 0; index < _row; index++)
-			_matrix[index] = new double[_column];
-	}
-
-	if (_row != _column)
-
-		return -1;
-
-
-	// Nhập từng phần tử cho ma trận
-	for (int i = 0; i < _row; i++)
-	{
-		for (int j = 0; j < _column; j++)
-		{
-			cout << "matrix[" << i << "]" << "[" << j << "]=";
-			cin >> _matrix[i][j];
-		}
-	}
-
+	if (_row == 0 && _column == 0 || _row != _column)
+		return INT_MIN;	// nếu không thể tìm định thức ma trận thì trả về INT_MIN
 	return (int)determine(_matrix, _row);
 }
 
 
 Matrix Matrix::inverseMatrix()
 {
-	
-	Matrix a;
-	return a;
+	//tìm ma trận nghịch đảo bằng định lí Cramer
+	int det = this->determinantMatrix();
+	if (det == INT_MIN || det == 0) return Matrix();	//nếu ma trận không khả nghịch thì trả về ma trận rỗng 
+	Matrix result(_row, _column), C(_row, _column);
+	//result là ma trận ghi kết quả, C là ma trận phụ hợp của input
+	// m là hệ số 1/|A|
+	double m = 1.0 / det;
+	for (int i = 0; i < _row; i++)
+	{
+		for (int j = 0; j < _column; j++)
+		{	//temp là ma trận Xmn (ma trận input loại bỏ hàng m và cột n)
+			Matrix temp(_row - 1, _column - 1);
+			int i_temp = -1, j_temp = 0;
+			for (int m = 0; m < _row; m++)
+			{
+				if (m != i)
+				{
+					j_temp = 0; i_temp++;
+					for (int n = 0; n < _row; n++)
+					{	//ghi kết quả vào ma trận Xmn
+						if (n != j)	temp._matrix[i_temp][j_temp++] = _matrix[m][n];
+					}
+				}
+			}
+			C._matrix[i][j] = temp.determinantMatrix() * pow(-1.0, i + j);
+		}
+	}
+	for (int i = 0; i < _row; i++)
+	{
+		for (int j = 0; j < _column; j++)
+		{ //ma trận A^-1 = m * C(T)
+			result._matrix[i][j] = m * C._matrix[j][i];
+		}
+	}
+	return result;
 }
 
 
@@ -301,11 +309,81 @@ int Matrix::rankMatrix()
 }
 
 
-void Matrix::systemLinerEquation()
-{
-
+Matrix Matrix::ChooseEquation(Matrix &x)
+{ //TODO: chọn n phương trình cho hệ n ẩn (có nghiệm) để giải.
+	//ma trận result sẽ có số dòng = số cột = số ẩn
+	Matrix result(_column - 1, _column - 1);
+	x._row = _column - 1;
+	for (int i = _column - 1; i < x._row; i++)
+	{
+		delete[] x._matrix[i];
+	}
+	int i_result = 1, i_input = 1;
+	result._matrix[0] = _matrix[0];
+	x._matrix[0][0] = _matrix[0][_column - 1];
+	for (int m = 0; m < _column - 1; m++)
+		result._matrix[0][m] = _matrix[0][m];
+	do
+	{	//biến isDuplicated để kiểm tra phương trình _matrix[i_input] có tương đương với phương trình nào trong result không (1: có/ 0: không)
+		int isDuplicated = 0;
+		for (int i = 0; i < i_result; i++)
+		{	//kiểm tra phương trình thứ i_input có trùng với phương trình nào trong result không
+			double scale = result._matrix[i][0] / _matrix[i_input][0];
+			int check = 1;
+			for (int k = 1; k < _column; k++)
+			{	//kiểm tra tỉ lệ của hệ số 2 phương trình có bằng với biến scale không, nếu có check = 0
+				if (abs(result._matrix[i][k] / _matrix[i_input][k] - scale) > 0.0001)
+				{
+					check = 0; break;
+				}
+			}if (check == 1) isDuplicated = 1;
+		}
+		//nếu không trùng với phương trình nào thì thêm vào ma trận result
+		if (isDuplicated == 0)
+		{
+			for (int m = 0; m < _column - 1; m++)
+				result._matrix[i_result][m] = _matrix[i_input][m];
+			x._matrix[i_result++][0] = _matrix[i_input][_column - 1];
+		}
+		i_input++;
+	} while (i_result < _column - 1);
+	return result;
 }
 
+void Matrix::systemLinerEquation()
+{
+	Matrix A(_row, _column - 1, _matrix);
+	//A là ma trận hệ số của ma trận input.
+	//Dùng hạng của ma trận để biện luận số nghiệm
+	int this_R = this->rankMatrix(), A_R = A.rankMatrix();
+	//phương trình vô nghiệm
+	if (this_R == A_R + 1) std::cout << "The equation has no solution!!!" << std::endl;
+	//phương trình có vô số nghiệm
+	else if (this_R == A_R && this_R < _column - 1) std::cout << "The equation has countless solutions" << std::endl;
+	else if (this_R == A_R && this_R == _column - 1)
+	{
+		Matrix temp(_row, 1);
+		if (_row > _column - 1)
+		{ //trường hợp có nhiều phương trình hơn ẩn mà tồn tại nghiệm, chọn ra n phương trình không trùng nhau để giải
+			A = this->ChooseEquation(temp);
+		}
+		else
+		{
+			for (int i = 0; i < _row; i++)
+			{
+				temp._matrix[i][0] = _matrix[i][_column - 1];
+			}
+		}
+		A = A.inverseMatrix();
+		temp = A * temp;
+		std::cout << "The equation has only 1 solution: { ";
+		for (int i = 0; i < _column - 1; i++)
+		{
+			std::cout << temp._matrix[i][0] << " ";
+		}
+		std::cout << "}" << std::endl;
+	}
+}
 
 void Matrix::inputMatrix()
 {
