@@ -153,7 +153,8 @@ vector<BoolExpression::Column> BoolExpression::creatTable()
 					}
 				}
 			}
-			temp.col.push_back(Combined);
+			if (Combined.Exp.size() != 0)
+				temp.col.push_back(Combined);
 		}
 		result.push_back(checking);
 		if (!checking.continueCombine())
@@ -429,7 +430,7 @@ vector<set<int>> patricksMethod(vector<vector<int>> table)
 	set< set<int> > posComb;	//posComb để lưu tất cả các kết quả của phép nhân các biểu thức Logic
 	set<int> temp;	//temp sử dụng để truyền vào hàm đệ quy getAllPossibleCombine
 	getAllPossibleCombine(pat_Exp, 0, temp, posComb);
-	int min = 9999;	//biến min để lưu số biến của biểu thức đơn giản nhất trong posComb 
+	int min = INT_MAX;	//biến min để lưu số biến của biểu thức đơn giản nhất trong posComb 
 
 	for (set<set<int>> ::iterator a = posComb.begin(); a != posComb.end(); ++a)
 	{	//lặp qua các phần tử của posComb
@@ -447,6 +448,16 @@ vector<set<int>> patricksMethod(vector<vector<int>> table)
 	}
 
 	return result;
+}
+
+int countElements(Cell a)
+{
+	int count = 0;
+	for (int i = 0; i < a.data.size(); i++)
+	{
+		if (a.data[i] != '-') count++;
+	}
+	return count;
 }
 
 void BoolExpression::simplifyExpression()
@@ -512,16 +523,34 @@ void BoolExpression::simplifyExpression()
 	}
 	else
 	{
-		vector<set<int>> temp = patricksMethod(table);
+		vector<set<int>> temp = patricksMethod(table);	// tìm các tổ hợp có số biểu thức nhỏ nhất phù hợp.
+		int min_elements = INT_MAX;	// biến lưu số biến nhỏ nhất trong 1 tổ hợp biểu thức
+		vector<int> n_elements;	// vector lưu số biển trong các tổ hợp biểu thức của temp trả về
+		n_elements.resize(temp.size());	// chuỗi chứa số biến có trong 1 tổ hợp các biểu thức
 		for (int i = 0; i < temp.size(); i++)
 		{
-			BoolExpression res_temp = essential;
-			for (set<int > ::iterator itr = temp[i].begin(); itr != temp[i].end(); ++itr)
-			{	//duyệt qua các phần tử của temp
+			for (set<int> ::iterator itr = temp[i].begin(); itr != temp[i].end(); ++itr)
+				{	//duyệt qua các phần tử của temp
 				int x = *itr;
-				res_temp.Exp.push_back(compactExp.Exp[x]);	//gán vào res_temp các tổ hợp biểu thức logic tối thiểu được chọn
+				n_elements[i] += countElements(compactExp.Exp[x]);	
+				// cộng vào biến đếm số biến của biểu thức compactExp.Exp[i]
+				}	
+			min_elements = (n_elements[i] < min_elements) ? n_elements[i] : min_elements;
+		}
+
+		for (int i = 0; i < temp.size(); i++)
+		{
+			if (n_elements[i] == min_elements)
+			{
+				BoolExpression res_temp = essential;
+				for (set<int > ::iterator itr = temp[i].begin(); itr != temp[i].end(); ++itr)
+				{	//duyệt qua các phần tử của temp
+					int x = *itr;
+					res_temp.Exp.push_back(compactExp.Exp[x]);
+					//gán vào res_temp các tổ hợp biểu thức logic tối thiểu được chọn
+				}
+				result.push_back(res_temp);
 			}
-			result.push_back(res_temp);
 		}
 	}
 	cout << endl << "====All expression(s) after simplify====" << endl;
