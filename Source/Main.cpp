@@ -10,18 +10,16 @@ using namespace std;
 void boolExpression()
 {
 	system("cls");
-	cout << "           ==========================================" << endl;
-	cout << "                    SIMPLIFY BOOL EXPRESSION         " << endl;
-	cout << "           ==========================================" << endl;
-	cout << endl << endl;
+	cout << "                ============================================================" << endl;
+	cout << "                                    SIMPLIFY BOOL EXPRESSION            " << endl;
+	cout << "                ============================================================" << endl;
+	cout << endl;
+	cout << "                                            RULES" << endl;
+	cout << "                                        not A   -> A'" << endl;
+	cout << "                                        A and B -> AB" << endl;
+	cout << "                                        A or B  -> A+B" << endl;
+	cout << endl << "        ===============================================================================" << endl;
 	BoolExpression b;
-
-	cout << "			RULES :" << endl;
-	cout << "				not A   -> A'" << endl;
-	cout << "				A and B -> AB" << endl;
-	cout << "				A or B  -> A+B" << endl;
-
-	cout << endl << endl;
 	b.creatCell();
 	cout << endl;
 	cout << "=================RESULT=================" << endl;
