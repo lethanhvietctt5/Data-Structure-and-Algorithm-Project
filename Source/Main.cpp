@@ -75,6 +75,7 @@ void vectorOperations()
 			  break;
 	}
 	default:
+		cout << "Your choose is INCONSONANT" << endl;
 		break;
 	}
 }
@@ -166,6 +167,7 @@ void matrix()
 		  break;
 	}
 	default:
+		cout << "Your choose is INCONSONANT" << endl;
 		break;
 	}
 }
@@ -196,11 +198,12 @@ int main()
 			matrix();
 			break;
 		default:
+			cout << "Your choose is INCONSONANT" << endl;
 			break;
 		}
 		cout << endl << endl;
 		cout << "Press any key to continue and Press ESC to exit." << endl;
-		_getch();
+		(void)_getch();
 	}
 	return 0;
 }

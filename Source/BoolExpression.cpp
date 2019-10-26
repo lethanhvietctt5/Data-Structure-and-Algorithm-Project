@@ -43,6 +43,7 @@ string maxCell(string in)
 bool checkCell(Cell a,vector<Cell> r)
 {
 	//TODO: kiểm tra xem a có tồn tại trong r hay không
+
 	vector<Cell>::iterator index;
 	const char* t1 = a.data.c_str();
 	for (index = r.begin(); index < r.end(); index++)
@@ -565,7 +566,7 @@ void BoolExpression::printExpression()
 {
 	//TODO: In ra biểu thức
 	string exp = "";
-
+	string exp_t;
 	vector<Cell>::iterator index;
 
 	for (index = Exp.begin(); index < Exp.end(); index++)
@@ -587,5 +588,10 @@ void BoolExpression::printExpression()
 
 	exp.pop_back();
 	exp.pop_back();
-	cout << exp;
+	exp.pop_back();
+
+	if (exp.length()==0)
+		cout << "Alway true";
+	else
+		cout << exp;
 }
