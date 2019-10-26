@@ -359,7 +359,7 @@ void Matrix::systemLinerEquation()
 	//phương trình vô nghiệm
 	if (this_R == A_R + 1) std::cout << "The equation has no solution!!!" << std::endl;
 	//phương trình có vô số nghiệm
-	else if (this_R == A_R && this_R < _column - 1) std::cout << "The equation has countless solutions" << std::endl;
+	else if (this_R == A_R && this_R < _column - 1) std::cout << "The equation has countless solutions!!!" << std::endl;
 	else if (this_R == A_R && this_R == _column - 1)
 	{
 		Matrix temp(_row, 1);
