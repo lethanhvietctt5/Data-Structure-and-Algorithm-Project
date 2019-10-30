@@ -591,7 +591,7 @@ void BoolExpression::printExpression()
 	exp.pop_back();
 
 	if (exp.length()==0)
-		cout << "Alway true";
+		cout << "Always true";
 	else
 		cout << exp;
 }
