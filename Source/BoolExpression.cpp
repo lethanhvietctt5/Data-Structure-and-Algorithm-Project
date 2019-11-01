@@ -174,7 +174,6 @@ string BoolExpression::inputBoolExpression()
 	string result;
 
 	cout << "Enter Your Bool Expression:" << endl;
-	cin.ignore();
 	getline(cin, result);
 	return result;
 }
